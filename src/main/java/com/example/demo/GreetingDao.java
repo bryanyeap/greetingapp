@@ -54,7 +54,7 @@ public class GreetingDao {
      * Return all the users stored in the database.
      */
 
-    @SuppressWarnings("unchecked")
+    /*@SuppressWarnings("unchecked")
     public List<Greeting> getAll() {
         return entityManager.createQuery("from User").getResultList();
     }
