@@ -34,7 +34,7 @@ public class RESTController {
         return greetingDao.getById(id);
     }
 
-
+    /*
     @RequestMapping(value = "/greeting", method = RequestMethod.GET)
     public Greeting greeting() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -49,7 +49,7 @@ public class RESTController {
         return newGreeting;
     }
 
-    @RequestMapping(value = "/createGreeting3", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/createGreeting3", method = RequestMethod.POST)
     public ResponseEntity<Void> createGreeting3(@RequestBody String content)
             throws IOException, URISyntaxException {
         //create new greeting...
@@ -79,6 +79,17 @@ public class RESTController {
 
         return greeting;
 
+    }*/
+
+    @RequestMapping(value="/deleteGreeting/{id}", method = RequestMethod.DELETE)
+    public HttpStatus deleteGreeting(@PathVariable int id) throws IOException {
+        greetingDao.deleteGreeting(id);
+        return HttpStatus.OK;
+    }
+
+    @RequestMapping(value="/updateGreeting/{id}", method = RequestMethod.PUT)
+    public Greeting updateGreeting(@RequestBody String message, @PathVariable int id) throws IOException {
+        return greetingDao.update(id, message);
     }
 
 }

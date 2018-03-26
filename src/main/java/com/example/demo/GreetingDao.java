@@ -45,6 +45,10 @@ public class GreetingDao {
         return;
     }
 
+    public void deleteGreeting(int id) {
+        Greeting greeting = entityManager.find(Greeting.class, id);
+        entityManager.remove(greeting);
+    }
 
     /**
      * Return all the users stored in the database.
@@ -54,8 +58,6 @@ public class GreetingDao {
     public List<Greeting> getAll() {
         return entityManager.createQuery("from User").getResultList();
     }
-
-
 
     /**
      * Return the user having the passed email.
@@ -73,11 +75,15 @@ public class GreetingDao {
      * Update the passed user in the database.
      */
     /
-    public void update(Greeting student) {
-        entityManager.merge(student);
-        return;
+    public Greeting update(int id, String message) {
+        Greeting greeting = entityManager.find(Greeting.class, id);
+        greeting.setContent(message);
+
+        entityManager.merge(greeting);
+
+        return entityManager.find(Greeting.class, id);
     }
-    
+
 
     // ------------------------
     // PRIVATE FIELDS
