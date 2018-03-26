@@ -74,7 +74,6 @@ public class GreetingDao {
     /**
      * Update the passed user in the database.
      */
-    /
     public Greeting update(int id, String message) {
         Greeting greeting = entityManager.find(Greeting.class, id);
         greeting.setContent(message);
