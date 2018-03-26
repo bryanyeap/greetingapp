@@ -81,13 +81,12 @@ public class RESTController {
 
     }*/
 
-    @RequestMapping(value="/deleteGreeting/{id}", method = RequestMethod.DELETE)
-    public HttpStatus deleteGreeting(@PathVariable int id) throws IOException {
-        greetingDao.deleteGreeting(id);
-        return HttpStatus.OK;
+    @RequestMapping(value = "/deleteGreeting/{id}", method = RequestMethod.DELETE)
+    public String deleteGreeting(@PathVariable int id) throws IOException {
+        return greetingDao.delete(id);
     }
 
-    @RequestMapping(value="/updateGreeting/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/updateGreeting/{id}", method = RequestMethod.PUT)
     public Greeting updateGreeting(@RequestBody String message, @PathVariable int id) throws IOException {
         return greetingDao.update(id, message);
     }

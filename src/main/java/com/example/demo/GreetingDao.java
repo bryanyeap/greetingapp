@@ -37,17 +37,17 @@ public class GreetingDao {
      * Delete the user from the database.
      */
 
-    public void delete(Greeting greeting) {
-        if (entityManager.contains(greeting))
+    public String delete(int id) {
+        if (entityManager.contains(entityManager.find(Greeting.class, id))) {
+            Greeting greeting = entityManager.find(Greeting.class, id);
             entityManager.remove(greeting);
-        else
-            entityManager.remove(entityManager.merge(greeting));
-        return;
-    }
 
-    public void deleteGreeting(int id) {
-        Greeting greeting = entityManager.find(Greeting.class, id);
-        entityManager.remove(greeting);
+            return "Deleted";
+        }
+        else {
+            System.out.println("No Valid Greeting");
+            return "Invalid Greeting";
+        }
     }
 
     /**
