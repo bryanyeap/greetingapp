@@ -22,6 +22,7 @@ public class RESTController {
 
     @Autowired
     private GreetingDao greetingDao;
+    private VehicleDao vehicleDao;
 
     @RequestMapping(value = "/createGreeting", method = RequestMethod.POST)
     public Greeting createGreeting(@RequestBody Greeting g) throws IOException {
@@ -34,53 +35,6 @@ public class RESTController {
         return greetingDao.getById(id);
     }
 
-    /*
-    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
-    public Greeting greeting() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(new File("./message.txt"), Greeting.class);
-    }
-
-    @RequestMapping(value = "/createGreeting1", method = RequestMethod.POST)
-    public Greeting createGreeting1(@RequestBody String content) throws IOException {
-        Greeting newGreeting = new Greeting(count++, content);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(new File("./message.txt"), newGreeting);
-        return newGreeting;
-    }
-
-    /*@RequestMapping(value = "/createGreeting3", method = RequestMethod.POST)
-    public ResponseEntity<Void> createGreeting3(@RequestBody String content)
-            throws IOException, URISyntaxException {
-        //create new greeting...
-
-        //should not be hardcoded! Only an example...
-        final URI location = new URI("http://localhost:8080/greeting/123");
-
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(location);
-
-        final ResponseEntity<Void> entity = new ResponseEntity<Void>(headers,
-                HttpStatus.CREATED);
-        return entity;
-    }
-
-    @RequestMapping(value = "/updateGreeting", method = RequestMethod.PUT)
-    public Greeting updateGreeting(@RequestBody String newMessage) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-
-        String message = FileUtils.readFileToString(new File("./message.txt"), StandardCharsets.UTF_8.name());
-
-        Greeting greeting = mapper.readValue(message, Greeting.class);
-
-        greeting.setContent(newMessage);
-
-        mapper.writeValue(new File("./message.txt"), greeting);
-
-        return greeting;
-
-    }*/
-
     @RequestMapping(value = "/deleteGreeting/{id}", method = RequestMethod.DELETE)
     public String deleteGreeting(@PathVariable int id) throws IOException {
         return greetingDao.delete(id);
@@ -89,6 +43,49 @@ public class RESTController {
     @RequestMapping(value = "/updateGreeting/{id}", method = RequestMethod.PUT)
     public Greeting updateGreeting(@RequestBody String message, @PathVariable int id) throws IOException {
         return greetingDao.update(id, message);
+    }
+
+    @RequestMapping(value = "/addVehicle", method = RequestMethod.POST)
+    public Vehicle addVehicle(@RequestBody Vehicle newVehicle) throws IOException {
+        return vehicleDao.create(newVehicle);
+    }
+
+    @RequestMapping(value = "/getVehicle/{id}", method = RequestMethod.GET)
+    public Vehicle getVehicle(@PathVariable ("id") int id) throws IOException {
+        return vehicleDao.getById(id);
+    }
+
+    @RequestMapping(value = "/deleteVehicle/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> removeVehicle(@PathVariable ("id") int id) throws IOException {
+        Vehicle vehicle = vehicleDao.getById(id);
+        if(vehicle != null) {
+            vehicleDao.delete(vehicle);
+            return new ResponseEntity<>("Deleted Vehicle", HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Invalid Vehicle Id", HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/updateVehicle/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateVehicle(@PathVariable ("id") int id, @RequestBody Vehicle vehicle) throws IOException {
+        Vehicle findVehicle = vehicleDao.getById(id);
+        if(findVehicle != null) {
+            findVehicle.setMakeModel(vehicle.getMakeModel());
+            findVehicle.setRetailPrice(vehicle.getRetailPrice());
+            findVehicle.setYear(vehicle.getYear());
+
+            vehicleDao.update(findVehicle);
+            return new ResponseEntity<>("Updated Vehicle", HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>("Invalid vehicle id", HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(value = "/getLatestVehicles", method = RequestMethod.GET)
+    public List<Vehicle> getLatestVehicles() throws IOException {
+        return vehicleDao.getLatest();
     }
 
 }
